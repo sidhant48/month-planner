@@ -217,7 +217,6 @@ const MonthView: React.FC<MonthViewProps> = ({
     };
   }, [resizingTask, tasks, previewTasks, setTasks]);
 
-  // Group days into weeks (7 days per row)
   const weeks = useMemo(() => {
     const result = [];
     for (let i = 0; i < days.length; i += 7) {
@@ -232,14 +231,12 @@ const MonthView: React.FC<MonthViewProps> = ({
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <Box onMouseUp={handleTileMouseUp}>
-        {/* Month Header */}
         <Box sx={{ mb: 2, textAlign: "center" }}>
           <Typography variant="h5" fontWeight="bold">
             {currentMonthYear}
           </Typography>
         </Box>
 
-        {/* Weekday Names Header */}
         <Grid container spacing={0.5} sx={{ mb: 1 }}>
           {weekDayNames.map((dayName) => (
             <Grid key={dayName} sx={{ flex: "1 1 0" }}>
@@ -256,7 +253,6 @@ const MonthView: React.FC<MonthViewProps> = ({
           ))}
         </Grid>
 
-        {/* Calendar Grid - One week per row */}
         {weeks.map((week, weekIndex) => (
           <Grid container spacing={0.5} key={weekIndex} sx={{ mb: 0.5 }}>
             {week.map((day) => (

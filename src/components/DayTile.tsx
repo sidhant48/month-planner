@@ -10,7 +10,7 @@ export type DayTileProps = {
   onMouseOver: (day: Date) => void;
   onMouseUp: () => void;
   onTaskClick?: (task: Task) => void;
-  onResizeStart?: (taskId: string, edge: "start" | "end") => void; // new
+  onResizeStart?: (taskId: string, edge: "start" | "end") => void;
 };
 
 const DayTile: React.FC<DayTileProps> = ({
