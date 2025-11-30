@@ -24,7 +24,7 @@ const TaskBar: React.FC<Props> = ({ task, onResizeStart, onClick }) => {
         display: "flex",
         alignItems: "center",
         height: 28,
-        width: "90%",
+        width: "91%",
         borderRadius: 1,
         px: 3,
         cursor: "grab",
