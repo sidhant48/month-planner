@@ -32,7 +32,7 @@ const DayTile: React.FC<DayTileProps> = ({
       style={{
         border: isSelected ? "2px solid blue" : "1px solid #ccc",
         minHeight: "100px",
-        padding: 30,
+        padding: 50,
         position: "relative",
       }}
     >

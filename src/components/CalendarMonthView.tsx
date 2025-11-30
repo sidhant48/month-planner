@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import {
   eachDayOfInterval,
   startOfMonth,
@@ -9,6 +9,7 @@ import {
   parseISO,
   addDays,
   differenceInCalendarDays,
+  format,
 } from "date-fns";
 import DayTile from "./DayTile";
 import TaskModal from "./TaskModal";
@@ -216,27 +217,66 @@ const MonthView: React.FC<MonthViewProps> = ({
     };
   }, [resizingTask, tasks, previewTasks, setTasks]);
 
+  // Group days into weeks (7 days per row)
+  const weeks = useMemo(() => {
+    const result = [];
+    for (let i = 0; i < days.length; i += 7) {
+      result.push(days.slice(i, i + 7));
+    }
+    return result;
+  }, [days]);
+
+  const weekDayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const currentMonthYear = format(today, "MMMM yyyy");
+
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <Box onMouseUp={handleTileMouseUp}>
-        <Grid container spacing={0.5}>
-          {days.map((day) => (
-            <Grid key={day.toISOString()}>
-              <DayTile
-                day={day}
-                tasks={(previewTasks || tasksToRender).filter((t) =>
-                  dayIsBetween(day, t.startDate, t.endDate)
-                )}
-                isSelected={isDaySelected(day)}
-                onMouseDown={handleTileMouseDown}
-                onMouseOver={handleTileMouseOver}
-                onMouseUp={handleTileMouseUp}
-                onTaskClick={handleTaskClick}
-                onResizeStart={handleResizeStart}
-              />
+        {/* Month Header */}
+        <Box sx={{ mb: 2, textAlign: "center" }}>
+          <Typography variant="h5" fontWeight="bold">
+            {currentMonthYear}
+          </Typography>
+        </Box>
+
+        {/* Weekday Names Header */}
+        <Grid container spacing={0.5} sx={{ mb: 1 }}>
+          {weekDayNames.map((dayName) => (
+            <Grid key={dayName} sx={{ flex: "1 1 0" }}>
+              <Box
+                sx={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  py: 1,
+                }}
+              >
+                <Typography variant="body2">{dayName}</Typography>
+              </Box>
             </Grid>
           ))}
         </Grid>
+
+        {/* Calendar Grid - One week per row */}
+        {weeks.map((week, weekIndex) => (
+          <Grid container spacing={0.5} key={weekIndex} sx={{ mb: 0.5 }}>
+            {week.map((day) => (
+              <Grid key={day.toISOString()} sx={{ flex: "1 1 0" }}>
+                <DayTile
+                  day={day}
+                  tasks={(previewTasks || tasksToRender).filter((t) =>
+                    dayIsBetween(day, t.startDate, t.endDate)
+                  )}
+                  isSelected={isDaySelected(day)}
+                  onMouseDown={handleTileMouseDown}
+                  onMouseOver={handleTileMouseOver}
+                  onMouseUp={handleTileMouseUp}
+                  onTaskClick={handleTaskClick}
+                  onResizeStart={handleResizeStart}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        ))}
 
         <TaskModal
           open={modalOpen}
